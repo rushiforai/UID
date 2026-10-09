@@ -1,0 +1,13 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.sha256 text eol=lf
+*.zip binary
+*.apk binary
+*.so binary
+third_party/zygisk/zygisk.hpp -text
