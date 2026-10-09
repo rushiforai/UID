@@ -5,6 +5,7 @@
 !/.github/
 !/LICENSE
 !/README.md
+!/README.en.md
 !/third_party/
 /third_party/*
 !/third_party/zygisk/
