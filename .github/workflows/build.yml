@@ -17,6 +17,8 @@ permissions:
 
 env:
   NDK_VERSION: 27.3.13750724
+  # Google's archive name for NDK_VERSION; used to download the toolchain directly.
+  NDK_RELEASE: r27d
 
 jobs:
   build:
@@ -33,10 +35,16 @@ jobs:
         with:
           python-version: '3.12'
 
-      - uses: android-actions/setup-android@v3
-
+      # The NDK is fetched directly rather than through sdkmanager: the legacy
+      # 'tools' package that setup-android installs no longer exists upstream.
       - name: Install Android NDK ${{ env.NDK_VERSION }}
-        run: sdkmanager --install "ndk;${NDK_VERSION}"
+        run: |
+          set -euo pipefail
+          curl -sSLo "$RUNNER_TEMP/ndk.zip" \
+            "https://dl.google.com/android/repository/android-ndk-${NDK_RELEASE}-linux.zip"
+          unzip -q "$RUNNER_TEMP/ndk.zip" -d "$RUNNER_TEMP"
+          echo "ANDROID_NDK_HOME=$RUNNER_TEMP/android-ndk-${NDK_RELEASE}" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/android-ndk-${NDK_RELEASE}/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++" --version
 
       - name: Build ${{ matrix.variant }} module
         run: >
